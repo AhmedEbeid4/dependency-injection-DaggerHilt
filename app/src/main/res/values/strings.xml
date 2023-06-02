@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DI</string>
+    <string name="remote">remote</string>
+    <string name="on_site">on site</string>
+</resources>

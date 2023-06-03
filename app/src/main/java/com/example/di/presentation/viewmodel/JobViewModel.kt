@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.di.domain.model.Job
 import com.example.di.domain.repository.JobRepository
+import com.example.di.domain.use_cases.fetch_data.FetchDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,20 +17,20 @@ import javax.inject.Inject
 @HiltViewModel
 class JobViewModel
 @Inject
-constructor(private val repository: JobRepository) : ViewModel() {
-    private val _jobs = MutableLiveData<List<Job>>()
-    val jobs : LiveData<List<Job>>
+constructor(
+    private val fetchUseCase: FetchDataUseCase
+) : ViewModel() {
+    private val _jobs = MutableLiveData<List<Job>?>()
+    val jobs: LiveData<List<Job>?>
         get() = _jobs
 
     init {
         assignJobs()
     }
-    private fun assignJobs (){
+
+    private fun assignJobs() {
         viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                repository.getJobs()
-            }
-            _jobs.postValue(repository.jobs)
+            _jobs.postValue(fetchUseCase())
         }
     }
 }
